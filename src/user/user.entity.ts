@@ -1,4 +1,6 @@
-import { Column, Entity, CreateDateColumn, UpdateDateColumn, PrimaryGeneratedColumn } from 'typeorm';
+import { Gig } from 'src/gig/gig.entity';
+import { Review } from 'src/review/review.entity';
+import { Column, Entity, CreateDateColumn, UpdateDateColumn, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 
 @Entity()
 export class User {
@@ -29,8 +31,20 @@ export class User {
   @Column({ nullable: true })
   location: string;
 
-  @Column('money', { default: 0 })
+  @Column('decimal', { precision: 15, scale: 2, default: 0 })
   wallet: number;
+
+  @Column({ type: 'varchar', length: 3, default: 'USD' })
+  currency: string;
+
+  @OneToMany(() => Review, review => review.reviewer)
+  reviewsSent: Review[];
+
+  @OneToMany(() => Review, review => review.reviewee)
+  reviewsReceived: Review[];
+
+  @OneToMany(() => Gig, gig => gig.owner)
+  gigs: Gig[];
 
   @CreateDateColumn()
   createdAt: Date;
