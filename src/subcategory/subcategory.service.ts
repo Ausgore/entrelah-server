@@ -28,7 +28,7 @@ export class SubcategoryService {
 	}
 
 	async getSubcategoryBy(where: FindOptionsWhere<Subcategory> | FindOptionsWhere<Subcategory>[]): Promise<Subcategory> {
-		const subcategory = await this.subcategoryRepo.findOne({ where }).catch(() => null);
+		const subcategory = await this.subcategoryRepo.findOne({ where, relations: ["category", "category.subcategories"] }).catch(() => null);
 		if (!subcategory) throw new NotFoundException("Subcategory cannot be found");
 		return subcategory;
 	}

@@ -13,6 +13,15 @@ export class GigService {
 	create(data: Partial<Gig>): Promise<Gig> {
 		const gig = this.gigRepo.create(data);
 		return this.gigRepo.save(gig);
+	}n
+
+	async editGigById(id: string, data: Partial<Gig>) {
+		let gig = await this.getGigBy({ id });
+		if (Object.keys(data).length) {
+			this.gigRepo.update({ id }, data);
+			gig = await this.getGigBy({ id });
+		}
+		return gig;
 	}
 
 	getGigs(where?: FindOptionsWhere<Gig>): Promise<Gig[]> {

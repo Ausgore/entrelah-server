@@ -19,7 +19,7 @@ export class Gig {
 	@Column({ type: "enum", enum: GigStatus, default: GigStatus.Drafted })
 	status: GigStatus;
 
-	@OneToOne(() => Subcategory, subcategory => subcategory.gigs)
+	@ManyToOne(() => Subcategory, subcategory => subcategory.gigs)
 	@JoinColumn({ name: "subcategoryId" })
 	subcategory: Subcategory;
 

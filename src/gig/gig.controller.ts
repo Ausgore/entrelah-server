@@ -3,6 +3,7 @@ import { GigService } from "./gig.service";
 import { CreateGigDto } from './dtos/CreateGig.dto';
 import { SubcategoryService } from '../subcategory/subcategory.service';
 import { UserService } from 'src/user/user.service';
+import { EditGigDto } from './dtos/EditGig.dto';
 
 @Controller("gig")
 export class GigController {
@@ -16,6 +17,11 @@ export class GigController {
 		await this.subcategoryService.getSubcategoryById(body.subcategoryId);
 		await this.userService.getUserById(body.ownerId);
 		return this.gigService.create(body);
+	}
+
+	@Post("edit/:id")
+	editGig(@Param("id") id: string, @Body() body: EditGigDto) {
+		return this.gigService.editGigById(id, body);
 	}
 
 	@Get(":id")

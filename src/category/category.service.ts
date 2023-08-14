@@ -19,7 +19,7 @@ export class CategoryService {
 	}
 
 	getCategories(where?: FindOptionsWhere<Category>): Promise<Category[]> {
-		return this.categoryRepo.find({ where });
+		return this.categoryRepo.find({ where, relations: ["subcategories"] });
 	}
 
 	async getCategoryBy(where: FindOptionsWhere<Category> | FindOptionsWhere<Category>[]): Promise<Category> {

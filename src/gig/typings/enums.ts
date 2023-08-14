@@ -1,5 +1,5 @@
 export enum GigStatus {
-	Drafted = 0,
-	Ongoing = 1,
-	Paused = 2
+	Drafted = "Drafted",
+	Ongoing = "Ongoing",
+	Paused = "Paused"
 }
