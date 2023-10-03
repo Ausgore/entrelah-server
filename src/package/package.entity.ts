@@ -1,6 +1,7 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { DeliveryDays } from "./typings/enums";
 import { Gig } from "src/gig/gig.entity";
+import { Order } from "src/order/order.entity";
 
 @Entity()
 export class Package {
@@ -13,7 +14,7 @@ export class Package {
 	@Column()
 	description: string;
 
-	@Column()
+	@Column({ nullable: true })
 	revisions: number;
 
 	@Column("decimal", { precision: 15, scale: 2 })
@@ -22,9 +23,15 @@ export class Package {
 	@Column({ type: "enum", enum: DeliveryDays })
 	deliveryDays: DeliveryDays;
 
+	@Column()
+	index: number;
+
 	@ManyToOne(() => Gig, gig => gig.packages)
 	@JoinColumn({ name: "gigId" })
 	gig: Gig;
+
+	@OneToMany(() => Order, order => order.package)
+	orders: Order[];
 
 	@Column()
 	gigId: string;

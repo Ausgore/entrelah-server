@@ -40,7 +40,7 @@ export class Review {
 	@Column()
 	revieweeId: string;
 
-	@ManyToOne(() => Gig, gig => gig.reviews, { nullable: true })
+	@ManyToOne(() => Gig, gig => gig.reviews, { nullable: true, onDelete: "SET NULL" })
 	gig: Gig;
 
 	@Column({ nullable: true })

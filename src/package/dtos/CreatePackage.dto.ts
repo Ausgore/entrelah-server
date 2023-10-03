@@ -1,8 +1,20 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsEnum, IsInt, IsNotEmpty, IsNumber, IsString, Max, Min } from "class-validator";
+import { IsArray, IsEnum, IsInt, IsNotEmpty, IsNumber, IsOptional, IsString, Max, Min, ValidateNested } from "class-validator";
 import { DeliveryDays } from "../typings/enums";
+import { Type } from "class-transformer";
 
-export class CreatePackageDto {
+export class CreatePackagesDto {
+	@ApiProperty({ description: "The gig's ID this package will be under" })
+	@IsNotEmpty()
+	@IsString()
+	gigId: string;
+
+	@IsArray()
+	@ValidateNested({ each: true })
+	@Type(() => Package)
+	packages: Package[];
+}
+class Package {
 	@ApiProperty({ description: "The title for this package" })
 	@IsNotEmpty()
 	@IsString()
@@ -14,7 +26,7 @@ export class CreatePackageDto {
 	description: string;
 
 	@ApiProperty({ description: "The number of revisions this package provides" })
-	@IsNotEmpty()
+	@IsOptional()
 	@IsInt()
 	@Min(-1)
 	@Max(9)
@@ -32,8 +44,10 @@ export class CreatePackageDto {
 	@IsEnum(DeliveryDays)
 	deliveryDays: DeliveryDays;
 
-	@ApiProperty({ description: "The gig's ID this package will be under" })
+	@ApiProperty({ description: "The index of this package" })
 	@IsNotEmpty()
-	@IsString()
-	gigId: string;
+	@IsNumber()
+	@Min(0)
+	@Max(2)
+	index: number;
 }

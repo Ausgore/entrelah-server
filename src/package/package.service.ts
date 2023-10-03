@@ -12,21 +12,30 @@ export class PackageService {
 		return this.packageRepo.save(pkg);
 	}
 
-	getPackages(where?: FindOptionsWhere<Package>): Promise<Package[]> {
-		return this.packageRepo.find({ where, relations: ["gig"] });
+	async updatePackageById(id: string, data: Partial<Package>): Promise<Package> {
+		await this.packageRepo.update({ id }, data);
+		return this.getPackageById(id);
 	}
 
-	async getPackagesBy(where: FindOptionsWhere<Package> | FindOptionsWhere<Package>[]): Promise<Package> {
-		const pkg = await this.packageRepo.findOne({ where, relations: ["gig"] }).catch(() => null);
+	getPackages(where?: FindOptionsWhere<Package>): Promise<Package[]> {
+		return this.packageRepo.find({ where, relations: ["gig", "gig.owner"] });
+	}
+
+	async getPackageBy(where: FindOptionsWhere<Package> | FindOptionsWhere<Package>[]): Promise<Package> {
+		const pkg = await this.packageRepo.findOne({ where, relations: ["gig", "gig.owner"] }).catch(() => null);
 		if (!pkg) throw new NotFoundException("Package cannot be found with that ID");
 		return pkg;
 	}
 
 	getPackageById(id: string) {
-		return this.getPackagesBy({ id });
+		return this.getPackageBy({ id });
 	}
 
 	clearPackages(criteria?: FindOptionsWhere<Package>) {
 		return this.packageRepo.delete(criteria ?? {});
+	}
+
+	deletePackageById(id: string) {
+		return this.packageRepo.delete({ id });
 	}
 }

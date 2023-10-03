@@ -2,11 +2,25 @@ import { Get, Post, Controller, Body, Query, Param, Delete, NotFoundException, I
 import { UserService } from "./user.service";
 import * as bcrypt from "bcrypt";
 import { User } from "./user.entity";
-import { EntityPropertyNotFoundError, QueryFailedError } from "typeorm";
+import { EntityPropertyNotFoundError, QueryFailedError, Repository } from "typeorm";
+import { CreateAttachmentDto } from "src/attachment/dtos/CreateAttachment.dto";
+import { InjectRepository } from "@nestjs/typeorm";
 
 @Controller("user")
 export class UserController {
-	constructor(private readonly userService: UserService) { }
+	constructor(
+		@InjectRepository(User) private readonly userRepo: Repository<User>,
+		private readonly userService: UserService) { }
+
+	@Get("username/:username")
+	getUserByUsername(@Param("username") username: string) {
+		return this.userService.getUserByUsername(username);
+	}
+
+	@Get("raw")
+	getRawUsers() {
+		return this.userRepo.find();
+	}
 
 	@Get(":id")
 	getUserById(@Param("id") id: string) {
@@ -18,6 +32,16 @@ export class UserController {
 		const users = await this.userService.getUsers(query).catch(e => e);
 		if (users instanceof EntityPropertyNotFoundError) throw new InternalServerErrorException(users.message);
 		else return users as User[];
+	}
+
+	@Post("save/:id")
+	async saveGig(@Param("id") id: string, @Query("id") gigId: string) {
+		return this.userService.saveGig(id, gigId);
+	}
+
+	@Post("unsave/:id")
+	async unsaveGig(@Param("id") id: string, @Query("id") gigId: string) {
+		return this.userService.unsaveGig(id, gigId);
 	}
 
 	@Post("authenticate")
@@ -34,7 +58,12 @@ export class UserController {
 
 	@Post("update/:id")
 	async updateUser(@Param("id") id: string, @Body() data) {
-		return this.userService.editUser(id, data);
+		return this.userService.updateUserById(id, data);
+	}
+
+	@Post(":id/avatar/upload")
+	async uploadAvatarToUser(@Param("id") id: string, @Body() body: CreateAttachmentDto) {
+		return this.userService.createUserAvatar(id, body);
 	}
 
 	@Post()

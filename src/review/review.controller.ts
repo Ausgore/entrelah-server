@@ -3,14 +3,15 @@ import { ReviewService } from './review.service';
 import { CreateReviewDto } from './dtos/CreateReview.dto';
 import { UserService } from 'src/user/user.service';
 import { Review } from './review.entity';
-import { User } from 'src/user/user.entity';
 import { ReviewType } from './typings/enums';
+import { GigService } from 'src/gig/gig.service';
 
 @Controller("review")
 export class ReviewController {
 	constructor(
 		private readonly reviewService: ReviewService,
-		private readonly userService: UserService
+		private readonly userService: UserService,
+		private readonly gigService: GigService
 	) { }
 
 	@Get(":id")
@@ -37,14 +38,15 @@ export class ReviewController {
 
 		if (body.senderId == body.receiverId) throw new InternalServerErrorException("Sender cannot send a review to themselves");
 
-		const reviewer: User = await this.userService.getUserById(body.senderId);
+		const reviewer = await this.userService.getUserById(body.senderId);
 		data.reviewerId = reviewer.id;
-
-		const reviewee: User = await this.userService.getUserById(body.receiverId);
+		const reviewee = await this.userService.getUserById(body.receiverId);
 		data.revieweeId = reviewee.id;
 
 		if (data.reviewType == ReviewType.Buyer) data.buyerRating = body.buyerRating;
 		else {
+			const gig = await this.gigService.getGigById(body.gigId);
+			data.gigId = gig.id;
 			data.communicationRating = body.communicationRating;
 			data.recommendationRating = body.recommendationRating;
 			data.accuracyRating = body.accuracyRating;

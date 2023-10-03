@@ -2,8 +2,10 @@ import { Package } from "src/package/package.entity";
 import { Review } from "src/review/review.entity";
 import { Subcategory } from "src/subcategory/subcategory.entity";
 import { User } from "src/user/user.entity";
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { GigStatus } from "./typings/enums";
+import { Faq } from "src/faq/faq.entity";
+import { GigAttachment } from "./entities/gigAttachment.entity";
 
 @Entity()
 export class Gig {
@@ -26,8 +28,17 @@ export class Gig {
 	@Column()
 	subcategoryId: string;
 
+	@Column({ default: true })
+	multipackages: boolean;
+
+	@OneToMany(() => Faq, f => f.gig, { cascade: true })
+	faqs: Faq[];
+
 	@OneToMany(() => Package, p => p.gig, { cascade: true })
 	packages: Package[];
+
+	@OneToMany(() => GigAttachment, g => g.gig, { cascade: true })
+	attachments: GigAttachment[];
 
 	@ManyToOne(() => User, user => user.gigs)
 	@JoinColumn({ name: "ownerId" })
@@ -38,4 +49,13 @@ export class Gig {
 
 	@OneToMany(() => Review, review => review.gig)
 	reviews: Review[];
+
+	@ManyToMany(() => User, user => user.savedGigs, { onDelete: "CASCADE" })
+	usersWhoSaved: User[];
+
+	@CreateDateColumn()
+	createdAt: Date;
+
+	@UpdateDateColumn()
+	updatedAt: Date;
 }
