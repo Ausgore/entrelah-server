@@ -38,6 +38,16 @@ export class GigController {
 		return this.gigService.deleteGigAttachmentById(id);
 	}
 
+	@Get("search/:query")
+	getGigsWithSimilarTitle(@Param("query") query: string, @Query("page") page) {
+		return this.gigService.getGigsWithSimilarTitle(query, page);
+	}
+
+	@Get("category/:categoryName/:subcategoryName?")
+	getGigsByCategory(@Query("page") page, @Param("categoryName") categoryName: string, @Param("subcategoryName") subcategoryName?: string) {
+		return this.gigService.getGigsByCategory(categoryName, subcategoryName, page)
+	}
+
 	@Get(":id/attachments")
 	async getGigAttachments(@Param("id") id: string, @Query() query) {
 		if (query.first == "true") return await this.gigService.getFirstGigAttachment(id);

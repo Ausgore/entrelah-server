@@ -4,7 +4,6 @@ import { Order } from './order.entity';
 import { FindOptionsWhere, Repository } from 'typeorm';
 import { OrderStatus } from './typings/enums';
 import { UserService } from 'src/user/user.service';
-import { PackageService } from 'src/package/package.service';
 
 @Injectable()
 export class OrderService {
@@ -23,7 +22,7 @@ export class OrderService {
 	}
 
 	async findOrderBy(where?: FindOptionsWhere<Order>) {
-		const order = await this.orderRepo.findOne({ where, relations: ["package", "package.gig", "customer", "events"] }).catch(() => null);
+		const order = await this.orderRepo.findOne({ where, relations: ["package", "package.gig", "customer", "events", "package.gig.owner"] }).catch(() => null);
 		if (!order) throw new NotFoundException("Order cannot be found with that ID");
 		return order;
 	}

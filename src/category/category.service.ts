@@ -23,7 +23,7 @@ export class CategoryService {
 	}
 
 	async getCategoryBy(where: FindOptionsWhere<Category> | FindOptionsWhere<Category>[]): Promise<Category> {
-		const category = await this.categoryRepo.findOne({ where }).catch(() => null);
+		const category = await this.categoryRepo.findOne({ where, relations: ["subcategories"] }).catch(() => null);
 		if (!category) throw new NotFoundException("Category cannot be found with that ID");
 		return category;
 	}

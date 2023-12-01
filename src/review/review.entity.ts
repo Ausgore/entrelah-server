@@ -1,7 +1,8 @@
 import { User } from "src/user/user.entity";
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { ReviewType } from "./typings/enums";
 import { Gig } from "src/gig/gig.entity";
+import { Order } from "src/order/order.entity";
 
 @Entity()
 export class Review {
@@ -41,6 +42,7 @@ export class Review {
 	revieweeId: string;
 
 	@ManyToOne(() => Gig, gig => gig.reviews, { nullable: true, onDelete: "SET NULL" })
+	@JoinColumn({ name: "gigId" })
 	gig: Gig;
 
 	@Column({ nullable: true })

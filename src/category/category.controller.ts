@@ -5,6 +5,11 @@ import { CategoryService } from "./category.service";
 export class CategoryController {
 	constructor(private readonly categoryService: CategoryService) {}
 
+	@Get("name/:name") 
+	getCategoryByName(@Param("name") name: string) {
+		return this.categoryService.getCategoryBy({ name });
+	}
+
 	@Get(":id")
 	getCategoryById(@Param("id") id: string) {
 		return this.categoryService.getCategoryById(id);

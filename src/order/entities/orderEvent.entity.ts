@@ -3,7 +3,7 @@ import { Order } from "../order.entity";
 import { OrderEventType } from "../typings/enums";
 
 @Entity()
-export class OrderEventEntity {
+export class OrderEvent {
 	@PrimaryGeneratedColumn("uuid")
 	id: string;
 

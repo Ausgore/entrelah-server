@@ -1,9 +1,10 @@
 import { User } from "src/user/user.entity";
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { OrderStatus } from "./typings/enums";
 import { Package } from "src/package/package.entity";
 import { DeliveryDays } from "src/package/typings/enums";
-import { OrderEventEntity } from "./entities/orderEvent.entity";
+import { OrderEvent } from "./entities/orderEvent.entity";
+import { Review } from "src/review/review.entity";
 
 @Entity()
 export class Order {
@@ -51,8 +52,8 @@ export class Order {
 	@Column({ nullable: true })
 	deliveredAt: Date;
 
-	@OneToMany(() => OrderEventEntity, oe => oe.order)
-	events: OrderEventEntity[];
+	@OneToMany(() => OrderEvent, oe => oe.order)
+	events: OrderEvent[];
 
 	@CreateDateColumn()
 	createdAt: Date;

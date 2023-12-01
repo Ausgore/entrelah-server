@@ -13,10 +13,10 @@ import { GigAttachment } from "src/gig/entities/gigAttachment.entity";
 import { Package } from "src/package/package.entity";
 import { PackageService } from "src/package/package.service";
 import { ConfigService } from "@nestjs/config";
-import { OrderEventEntity } from "./entities/orderEvent.entity";
+import { OrderEvent } from "./entities/orderEvent.entity";
 
 @Module({
-	imports: [TypeOrmModule.forFeature([Order, User, Gig, Attachment, GigAttachment, Package, OrderEventEntity])],
+	imports: [TypeOrmModule.forFeature([Order, User, Gig, Attachment, GigAttachment, Package, OrderEvent])],
 	providers: [OrderService, UserService, GigService, AttachmentService, PackageService, ConfigService],
 	controllers: [OrderController],
 	exports: [TypeOrmModule]
